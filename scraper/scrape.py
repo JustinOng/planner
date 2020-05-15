@@ -55,6 +55,7 @@ def get_course(header_table, content_table):
     index_no = False
     for y, row in enumerate(content_table.find_all("tr")[1:]):
         lesson = {
+            "index": "",
             "type": "",
             "group": "",
             "day": "",
@@ -62,6 +63,7 @@ def get_course(header_table, content_table):
             "venue": "",
             "remark": ""
         }
+
         for x, col in enumerate(row.find_all("td")):
             cell = col.text.strip()
 
@@ -74,6 +76,7 @@ def get_course(header_table, content_table):
                     course["indexes"][index_no] = index
 
                 index_no = cell
+                lesson["index"] = index_no
 
                 index = {
                     "id": index_no,
