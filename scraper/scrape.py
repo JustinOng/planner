@@ -12,7 +12,7 @@ AY_SEM = "1"
 MAIN_URL = "https://wish.wis.ntu.edu.sg/webexe/owa/aus_schedule.main"
 SCHEDULE_URL = "https://wish.wis.ntu.edu.sg/webexe/owa/AUS_SCHEDULE.main_display1"
 
-requests_cache.install_cache("cache", allowable_methods=("GET", "POST"), expire_after=24*3600)
+requests_cache.install_cache("cache", allowable_methods=("GET", "POST"))
 
 def test_pattern(pattern, inp, label):
     if re.match(pattern, inp) == None:
@@ -27,7 +27,7 @@ def get_course(header_table, content_table):
         "code": "",
         "name": "",
         "au": "",
-        "indexes": []
+        "indexes": {}
     }
 
     for y, row in enumerate(header_table.find_all("tr")):
@@ -71,7 +71,7 @@ def get_course(header_table, content_table):
                 # if a index has already been filled out
                 # and this row is a new one, save it
                 if index_no:
-                    course["indexes"].append(index)
+                    course["indexes"][index_no] = index
 
                 index_no = cell
 
@@ -104,7 +104,7 @@ def get_course(header_table, content_table):
     
     # save last index
     if index_no:
-        course["indexes"].append(index)
+        course["indexes"][index_no] = index
     
     return course
 
