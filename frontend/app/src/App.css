@@ -1,0 +1,11 @@
+#root > .ant-layout {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+#root > .ant-layout > .ant-layout-content {
+  padding: 20px;
+  max-width: 1000px;
+}
