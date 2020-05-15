@@ -6,23 +6,19 @@ import Week from './Week';
 
 export default class Semester {
   weeks: Week[];
-  courses: string[];
+  indexes: string[];
 
   constructor() {
     this.weeks = [];
     for (let i = 0; i < NUM_WEEKS; i++) this.weeks.push(new Week());
 
-    this.courses = [];
+    this.indexes = [];
   }
 
-  add(course: ICourse, indexId: string) {
-    if (this.courses.includes(indexId)) {
-      throw new Error(`${indexId} has already been added!`);
+  add(index: IIndex) {
+    if (this.indexes.includes(index.id)) {
+      throw new Error(`${index.id} has already been added!`);
     }
-
-    const index = course.indexes[indexId];
-
-    if (!index) throw new Error(`Tried to add non existent index ${index}`);
 
     for (const lesson of index.lessons) {
       for (let week = 0; week < NUM_WEEKS; week++) {
@@ -30,7 +26,7 @@ export default class Semester {
       }
     }
 
-    this.courses.push(indexId);
+    this.indexes.push(index.id);
   }
 
   hasConflict(): boolean {

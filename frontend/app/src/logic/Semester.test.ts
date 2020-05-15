@@ -37,7 +37,7 @@ test('add 1 block lesson to all weeks', () => {
     }
   };
 
-  s.add(course, '10000');
+  s.add(course.indexes['10000']);
 
   for (let week = 0; week < NUM_WEEKS; week++) {
     expect(s.weeks[week].lessons['MON'].get(930)!.length).toEqual(1);
@@ -72,7 +72,7 @@ test('add 2 block lesson', () => {
     }
   };
 
-  s.add(course, '10000');
+  s.add(course.indexes['10000']);
 
   expect(s.weeks[0].lessons['MON'].get(930)!.length).toEqual(1);
   expect(s.weeks[0].lessons['MON'].get(930)![0].index).toEqual('10000');
@@ -106,7 +106,7 @@ test('add 2 block lesson at 8am', () => {
     }
   };
 
-  s.add(course, '10000');
+  s.add(course.indexes['10000']);
 
   expect(s.weeks[0].lessons['MON'].get(800)!.length).toEqual(1);
   expect(s.weeks[0].lessons['MON'].get(800)![0].index).toEqual('10000');
@@ -140,10 +140,10 @@ test('adding course twice should error', () => {
     }
   };
 
-  s.add(course, '10000');
-  expect(s.courses).toContain('10000');
+  s.add(course.indexes['10000']);
+  expect(s.indexes).toContain('10000');
 
-  expect(() => s.add(course, '10000')).toThrow();
+  expect(() => s.add(course.indexes['10000'])).toThrow();
 });
 
 test('course overlap should conflict', () => {
@@ -187,9 +187,9 @@ test('course overlap should conflict', () => {
 
   expect(s.hasConflict()).toEqual(false);
 
-  s.add(course, '10000');
+  s.add(course.indexes['10000']);
   expect(s.hasConflict()).toEqual(false);
 
-  s.add(course, '10001');
+  s.add(course.indexes['10001']);
   expect(s.hasConflict()).toEqual(true);
 });
