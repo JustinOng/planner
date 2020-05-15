@@ -55,7 +55,7 @@ def get_course(header_table, content_table):
     index_no = False
     for y, row in enumerate(content_table.find_all("tr")[1:]):
         lesson = {
-            "index": "",
+            "index": index_no,
             "type": "",
             "group": "",
             "day": "",
