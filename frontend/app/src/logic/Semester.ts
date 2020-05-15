@@ -32,4 +32,12 @@ export default class Semester {
 
     this.courses.push(indexId);
   }
+
+  hasConflict(): boolean {
+    for (const week of this.weeks) {
+      if (week.hasConflict()) return true;
+    }
+
+    return false;
+  }
 }

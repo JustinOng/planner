@@ -47,4 +47,14 @@ export default class Week {
       }
     }
   }
+
+  hasConflict(): boolean {
+    for (const day in this.lessons) {
+      for (const lessons of this.lessons[day].values()) {
+        if (lessons.length > 1) return true;
+      }
+    }
+
+    return false;
+  }
 }

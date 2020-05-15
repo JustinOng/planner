@@ -145,3 +145,51 @@ test('adding course twice should error', () => {
 
   expect(() => s.add(course, '10000')).toThrow();
 });
+
+test('course overlap should conflict', () => {
+  const s = new Semester();
+
+  const course: ICourse = {
+    code: 'TEST0001',
+    name: 'Name Test',
+    au: '1.0 AU',
+    indexes: {
+      '10000': {
+        id: '10000',
+        lessons: [
+          {
+            index: '10000',
+            type: 'LEC/STUDIO',
+            group: 'TEST1',
+            day: 'MON',
+            time: '0930-1130',
+            venue: 'LT0A',
+            remark: ''
+          }
+        ]
+      },
+      '10001': {
+        id: '10001',
+        lessons: [
+          {
+            index: '10001',
+            type: 'LEC/STUDIO',
+            group: 'TEST1',
+            day: 'MON',
+            time: '1030-1230',
+            venue: 'LT0A',
+            remark: ''
+          }
+        ]
+      }
+    }
+  };
+
+  expect(s.hasConflict()).toEqual(false);
+
+  s.add(course, '10000');
+  expect(s.hasConflict()).toEqual(false);
+
+  s.add(course, '10001');
+  expect(s.hasConflict()).toEqual(true);
+});
