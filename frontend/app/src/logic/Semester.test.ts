@@ -230,3 +230,40 @@ test('course remarks describing teaching weeks (range)', () => {
     }
   }
 });
+
+test('course remarks describing teaching weeks (exact)', () => {
+  const s = new Semester();
+
+  const course: ICourse = {
+    code: 'TEST0001',
+    name: 'Name Test',
+    au: '1.0 AU',
+    indexes: {
+      '10000': {
+        id: '10000',
+        lessons: [
+          {
+            index: '10000',
+            type: 'LEC/STUDIO',
+            group: 'TEST1',
+            day: 'MON',
+            time: '0930-1130',
+            venue: 'LT0A',
+            remark: 'Teaching Wk5'
+          }
+        ]
+      }
+    }
+  };
+
+  s.add(course.indexes['10000']);
+
+  for (let week = 0; week < NUM_WEEKS; week++) {
+    if (week === 4) {
+      expect(s.weeks[week].lessons['MON'].get(930)!.length).toEqual(1);
+      expect(s.weeks[week].lessons['MON'].get(930)![0].index).toEqual('10000');
+    } else {
+      expect(s.weeks[week].lessons['MON'].get(930)!.length).toEqual(0);
+    }
+  }
+});

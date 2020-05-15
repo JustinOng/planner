@@ -34,6 +34,12 @@ export default class Semester {
         for (let week = startWeek; week <= endWeek; week++) {
           this.weeks[week].add(lesson);
         }
+      } else if ((match = lesson.remark.match(/^Teaching Wk(\d+)$/))) {
+        const week = parseInt(match[1], 10) - 1;
+
+        this.weeks[week].add(lesson);
+      } else {
+        throw new Error(`Unknown remarks format ${lesson.remark}`);
       }
     }
 
