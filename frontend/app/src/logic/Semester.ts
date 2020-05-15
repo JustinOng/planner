@@ -21,8 +21,19 @@ export default class Semester {
     }
 
     for (const lesson of index.lessons) {
-      for (let week = 0; week < NUM_WEEKS; week++) {
-        if (!lesson.remark) this.weeks[week].add(lesson);
+      let match;
+
+      if (!lesson.remark) {
+        for (let week = 0; week < NUM_WEEKS; week++) {
+          this.weeks[week].add(lesson);
+        }
+      } else if ((match = lesson.remark.match(/^Teaching Wk(\d+)-(\d+)$/))) {
+        const startWeek = parseInt(match[1], 10) - 1;
+        const endWeek = parseInt(match[2], 10) - 1;
+
+        for (let week = startWeek; week <= endWeek; week++) {
+          this.weeks[week].add(lesson);
+        }
       }
     }
 
