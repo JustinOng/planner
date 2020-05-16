@@ -1,14 +1,15 @@
 import React from 'react';
-import { Layout, Select, Tag } from 'antd';
+import { Layout, Select, Button } from 'antd';
 import 'antd/dist/antd.less';
 import './App.css';
 
-import { ICourse } from './logic/interface.d';
+import Processor from './logic/Processor';
+
+import { ICourse, ICourseMap } from './logic/interface.d';
 
 interface IAppState {
-  courses: {
-    [key: string]: ICourse;
-  };
+  courses: ICourseMap;
+  selectedCourses: string[];
 }
 
 export default class App extends React.Component<{}, IAppState> {
@@ -16,7 +17,8 @@ export default class App extends React.Component<{}, IAppState> {
     super(props);
 
     this.state = {
-      courses: {}
+      courses: {},
+      selectedCourses: ['CE2001', 'CE2002', 'CE2004', 'CE2005', 'CE2107']
     };
   }
 
@@ -28,33 +30,41 @@ export default class App extends React.Component<{}, IAppState> {
       });
   }
 
-  onSelect = (value: any, option: any) => {
-    console.log('+', value);
+  onChange = (courses: string[]) => {
+    this.setState({ selectedCourses: courses });
   };
 
-  onDeselect = (value: any, option: any) => {
-    console.log('-', value);
+  onProcess = () => {
+    const p = new Processor(this.state.courses, this.state.selectedCourses);
+    p.run();
   };
 
   render() {
     return (
       <Layout>
         <Layout.Content>
-          <Select
-            mode="multiple"
-            placeholder="Select Courses"
-            style={{ width: '100%' }}
-            onSelect={this.onSelect}
-            onDeselect={this.onDeselect}
-            optionLabelProp="value"
-          >
-            {Object.values(this.state.courses).map((course: ICourse) => (
-              <Select.Option key={course.code} value={course.code}>
-                {`${course.code} - ${course.name}`.replace(/\*?#?$/, '')}
-              </Select.Option>
-            ))}
-          </Select>
-          asdf
+          <div style={{ display: 'flex' }}>
+            <Select
+              mode="multiple"
+              placeholder="Select Courses"
+              style={{ width: '100%' }}
+              onChange={this.onChange}
+              optionLabelProp="value"
+            >
+              {Object.values(this.state.courses).map((course: ICourse) => (
+                <Select.Option key={course.code} value={course.code}>
+                  {`${course.code} - ${course.name}`.replace(/\*?#?$/, '')}
+                </Select.Option>
+              ))}
+            </Select>
+            <Button
+              type="primary"
+              disabled={this.state.selectedCourses.length === 0}
+              onClick={this.onProcess}
+            >
+              Process
+            </Button>
+          </div>
         </Layout.Content>
       </Layout>
     );
