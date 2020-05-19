@@ -37,7 +37,7 @@ test('add 1 block lesson to all weeks', () => {
     }
   };
 
-  s.add(course.indexes['10000']);
+  s.add(course.code, course.indexes['10000']);
 
   for (let week = 0; week < NUM_WEEKS; week++) {
     expect(s.weeks[week].lessons['MON'].get(930)!.length).toEqual(1);
@@ -72,7 +72,7 @@ test('add 2 block lesson', () => {
     }
   };
 
-  s.add(course.indexes['10000']);
+  s.add(course.code, course.indexes['10000']);
 
   expect(s.weeks[0].lessons['MON'].get(930)!.length).toEqual(1);
   expect(s.weeks[0].lessons['MON'].get(930)![0].index).toEqual('10000');
@@ -106,7 +106,7 @@ test('add 2 block lesson at 8am', () => {
     }
   };
 
-  s.add(course.indexes['10000']);
+  s.add(course.code, course.indexes['10000']);
 
   expect(s.weeks[0].lessons['MON'].get(800)!.length).toEqual(1);
   expect(s.weeks[0].lessons['MON'].get(800)![0].index).toEqual('10000');
@@ -140,57 +140,66 @@ test('adding course twice should error', () => {
     }
   };
 
-  s.add(course.indexes['10000']);
-  expect(s.indexes).toContain('10000');
+  s.add(course.code, course.indexes['10000']);
+  expect(s.added['10000']).toContain(course.code);
 
-  expect(() => s.add(course.indexes['10000'])).toThrow();
+  expect(() => s.add(course.code, course.indexes['10000'])).toThrow();
 });
 
 test('course overlap should conflict', () => {
   const s = new Semester();
 
-  const course: ICourse = {
-    code: 'TEST0001',
-    name: 'Name Test',
-    au: '1.0 AU',
-    indexes: {
-      '10000': {
-        id: '10000',
-        lessons: [
-          {
-            index: '10000',
-            type: 'LEC/STUDIO',
-            group: 'TEST1',
-            day: 'MON',
-            time: '0930-1130',
-            venue: 'LT0A',
-            remark: ''
-          }
-        ]
-      },
-      '10001': {
-        id: '10001',
-        lessons: [
-          {
-            index: '10001',
-            type: 'LEC/STUDIO',
-            group: 'TEST1',
-            day: 'MON',
-            time: '1030-1230',
-            venue: 'LT0A',
-            remark: ''
-          }
-        ]
+  const courses: ICourse[] = [
+    {
+      code: 'TEST0001',
+      name: 'Name Test1',
+      au: '1.0 AU',
+      indexes: {
+        '10000': {
+          id: '10000',
+          lessons: [
+            {
+              index: '10000',
+              type: 'LEC/STUDIO',
+              group: 'TEST1',
+              day: 'MON',
+              time: '0930-1130',
+              venue: 'LT0A',
+              remark: ''
+            }
+          ]
+        }
+      }
+    },
+    {
+      code: 'TEST0002',
+      name: 'Name Test2',
+      au: '1.0 AU',
+      indexes: {
+        '10001': {
+          id: '10001',
+          lessons: [
+            {
+              index: '10001',
+              type: 'LEC/STUDIO',
+              group: 'TEST1',
+              day: 'MON',
+              time: '1030-1230',
+              venue: 'LT0A',
+              remark: ''
+            }
+          ]
+        }
       }
     }
-  };
+  ];
 
   expect(s.hasConflict()).toEqual(false);
 
-  s.add(course.indexes['10000']);
+  s.add(courses[0].code, courses[0].indexes['10000']);
   expect(s.hasConflict()).toEqual(false);
 
-  s.add(course.indexes['10001']);
+  s.add(courses[1].code, courses[1].indexes['10001']);
   expect(s.hasConflict()).toEqual(true);
 });
 
@@ -219,7 +228,7 @@ test('course remarks describing teaching weeks (range)', () => {
     }
   };
 
-  s.add(course.indexes['10000']);
+  s.add(course.code, course.indexes['10000']);
 
   for (let week = 0; week < NUM_WEEKS; week++) {
     if (week === 0) {
@@ -256,7 +265,7 @@ test('course remarks describing teaching weeks (exact)', () => {
     }
   };
 
-  s.add(course.indexes['10000']);
+  s.add(course.code, course.indexes['10000']);
 
   for (let week = 0; week < NUM_WEEKS; week++) {
     if (week === 4) {
@@ -293,7 +302,7 @@ test('course remarks describing teaching weeks (multiple exact)', () => {
     }
   };
 
-  s.add(course.indexes['10000']);
+  s.add(course.code, course.indexes['10000']);
 
   for (let week = 0; week < NUM_WEEKS; week++) {
     if ([1, 4, 6].includes(week)) {

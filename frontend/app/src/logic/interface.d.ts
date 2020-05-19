@@ -25,3 +25,7 @@ export interface ICourse {
 export interface ICourseMap {
   [key: string]: ICourse;
 }
+
+export interface IIndexMap {
+  [key: string]: string;
+}

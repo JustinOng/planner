@@ -1,4 +1,4 @@
-import { ICourse, IIndex, ILesson } from './interface.d';
+import { IIndex, IIndexMap } from './interface.d';
 
 import { NUM_WEEKS } from '../config';
 
@@ -6,18 +6,18 @@ import Week from './Week';
 
 export default class Semester {
   weeks: Week[];
-  indexes: string[];
+  added: IIndexMap;
 
   constructor() {
     this.weeks = [];
     for (let i = 0; i < NUM_WEEKS; i++) this.weeks.push(new Week());
 
-    this.indexes = [];
+    this.added = {};
   }
 
-  add(index: IIndex) {
-    if (this.indexes.includes(index.id)) {
-      throw new Error(`${index.id} has already been added!`);
+  add(courseCode: string, index: IIndex) {
+    if (Object.values(this.added).includes(courseCode)) {
+      throw new Error(`${courseCode} has already been added!`);
     }
 
     for (const lesson of index.lessons) {
@@ -43,7 +43,7 @@ export default class Semester {
       }
     }
 
-    this.indexes.push(index.id);
+    this.added[index.id] = courseCode;
   }
 
   hasConflict(): boolean {
