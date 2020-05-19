@@ -41,17 +41,25 @@ export default class Processor {
 
     this.stats.total = product.length;
 
-    for (const courses of product) {
+    const validSemesters = [];
+
+    for (const indexes of product) {
       const s = new Semester();
 
-      for (const course of courses) s.add(course);
+      for (const i in indexes) {
+        s.add(this.courses[i].code, indexes[i]);
+      }
 
       if (s.hasConflict()) {
         this.stats.conflicts++;
         continue;
       }
+
+      validSemesters.push(s);
     }
 
     console.log(this.stats);
+
+    return validSemesters;
   }
 }
