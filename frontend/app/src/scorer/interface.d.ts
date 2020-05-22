@@ -5,7 +5,13 @@ export interface IScoreResult {
   score: number;
 }
 
+export interface IScoreResultLabelled extends IScoreResult {
+  rule: string;
+  description: string;
+}
+
 export interface IRule {
+  description: string;
   score(semester: SemesterCls): IScoreResult;
   render(): React.ReactElement;
 }

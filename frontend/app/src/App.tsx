@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout, Select, Button } from 'antd';
 import 'antd/dist/antd.less';
-import './App.css';
+import './App.less';
 
 import Semester from './components/Semester';
 import Scorer from './scorer';
@@ -27,7 +27,7 @@ export default class App extends React.Component<{}, IAppState> {
 
     this.state = {
       courses: {},
-      selectedCourses: ['CE2001', 'CE2002', 'CE2004', 'CE2005', 'CE2107'],
+      selectedCourses: ['CE2001', 'CE2002', 'CE2004'], //, 'CE2005', 'CE2107'],
       validSemesters: [],
       curSemester: 0,
       showingRules: false
@@ -49,9 +49,13 @@ export default class App extends React.Component<{}, IAppState> {
   };
 
   onProcess = () => {
+    if (!this.scorerRef) throw new Error('scorer ref not defined!');
+
     const p = new Processor(this.state.courses, this.state.selectedCourses);
-    const validSemesters = p.run();
-    console.log(this.scorerRef.current.score(validSemesters[0]));
+    const rules = this.scorerRef.current.rules;
+    const validSemesters = p
+      .run(rules)
+      .sort((semA, semB) => semB.totalScore - semA.totalScore);
     this.setState({ curSemester: 0, validSemesters });
   };
 
@@ -87,10 +91,38 @@ export default class App extends React.Component<{}, IAppState> {
           </div>
           {!!this.state.validSemesters.length && (
             <div>
-              <div>
-                <Button>Previous</Button>
-                <div>asdf</div>
-                <Button>Next</Button>
+              <div className="semester-select">
+                <Button
+                  onClick={() =>
+                    this.setState({
+                      curSemester: this.state.curSemester
+                        ? this.state.curSemester - 1
+                        : 0
+                    })
+                  }
+                >
+                  Previous
+                </Button>
+                <div className="semester-select-text">
+                  <span>
+                    {`Displaying Timetable ${this.state.curSemester + 1}/${
+                      this.state.validSemesters.length
+                    }`}
+                  </span>
+                </div>
+                <Button
+                  onClick={() =>
+                    this.setState({
+                      curSemester:
+                        this.state.curSemester <
+                        this.state.validSemesters.length - 1
+                          ? this.state.curSemester + 1
+                          : this.state.curSemester
+                    })
+                  }
+                >
+                  Next
+                </Button>
               </div>
               <Semester
                 data={this.state.validSemesters[this.state.curSemester]}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs } from 'antd';
+import { Tabs, Tag } from 'antd';
 
 import Week from '../Week';
 import SemesterCls from '../../logic/Semester';
@@ -14,17 +14,31 @@ export default class Semester extends React.Component<ISemesterProps, {}> {
   render() {
     return (
       <div>
-        <div>
-          {Object.entries(this.props.data.added).map(
-            ([indexId, courseCode]) => (
-              <span
-                key={`${courseCode}:${indexId}`}
-                className="course-list-item"
-              >
-                {courseCode}: {indexId}
-              </span>
-            )
-          )}
+        <div className="semester-header">
+          <div>
+            {Object.entries(this.props.data.added).map(
+              ([indexId, courseCode]) => (
+                <div
+                  key={`${courseCode}:${indexId}`}
+                  className="course-list-item"
+                >
+                  {courseCode}: <Tag>{indexId}</Tag>
+                </div>
+              )
+            )}
+          </div>
+          <div>
+            <div>Total Score: {this.props.data.totalScore + ' '}</div>
+            <hr />
+            <div>
+              Score Breakdown:
+              {this.props.data.scores.map((scoreResult) => (
+                <div>
+                  {scoreResult.rule}: {scoreResult.score}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
         <Tabs defaultActiveKey="0">
           {this.props.data.weeks.map((week, i) => (

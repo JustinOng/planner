@@ -1,4 +1,5 @@
 import { IIndex, IIndexMap } from './interface.d';
+import { IRule, IScoreResultLabelled } from '../scorer/interface.d';
 
 import { NUM_WEEKS } from '../config';
 
@@ -7,12 +8,17 @@ import Week from './Week';
 export default class Semester {
   weeks: Week[];
   added: IIndexMap;
+  totalScore: number;
+  scores: IScoreResultLabelled[];
 
   constructor() {
     this.weeks = [];
     for (let i = 0; i < NUM_WEEKS; i++) this.weeks.push(new Week());
 
     this.added = {};
+
+    this.totalScore = 0;
+    this.scores = [];
   }
 
   add(courseCode: string, index: IIndex) {
@@ -52,5 +58,30 @@ export default class Semester {
     }
 
     return false;
+  }
+
+  score(rules: IRule[]) {
+    this.scores = [];
+
+    let scoreSum = 0;
+    let weightSum = 0;
+    for (const rule of rules) {
+      const score = rule.score(this);
+
+      scoreSum += score.score * score.weight;
+      weightSum += score.weight;
+
+      this.scores.push({
+        ...score,
+        rule: rule.constructor.name,
+        description: rule.description
+      });
+    }
+
+    if (weightSum === 0) {
+      this.totalScore = 0;
+    } else {
+      this.totalScore = Math.floor(scoreSum / weightSum);
+    }
   }
 }

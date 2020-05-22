@@ -1,6 +1,7 @@
 import Semester from './Semester';
 
-import { ICourseMap, ICourse } from './interface';
+import { ICourseMap, ICourse } from './interface.d';
+import { IRule } from '../scorer/interface.d';
 
 // https://gist.github.com/ssippe/1f92625532eef28be6974f898efb23ef#gistcomment-3274652
 function cartesianProduct<T>(...allEntries: T[][]): T[][] {
@@ -34,7 +35,7 @@ export default class Processor {
     };
   }
 
-  run() {
+  run(rules: IRule[]) {
     const product = cartesianProduct(
       ...this.courses.map((course) => Object.values(course.indexes))
     );
@@ -55,10 +56,10 @@ export default class Processor {
         continue;
       }
 
+      s.score(rules);
+
       validSemesters.push(s);
     }
-
-    console.log(this.stats);
 
     return validSemesters;
   }
