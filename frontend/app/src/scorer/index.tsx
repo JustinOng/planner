@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal } from 'antd';
 
 import NoEarly from './NoEarlyRule';
+import LunchRule from './LunchRule';
 
 import { IRule } from './interface.d';
 
@@ -18,7 +19,7 @@ export default class Scorer extends React.Component<IScorerProps, {}> {
   constructor(props: IScorerProps) {
     super(props);
 
-    this.rules = [new NoEarly()];
+    this.rules = [new NoEarly(), new LunchRule()];
   }
 
   render() {
@@ -28,6 +29,7 @@ export default class Scorer extends React.Component<IScorerProps, {}> {
         onCancel={this.props.onCancel}
         footer={null}
         title="Rules"
+        style={{ minWidth: '800px' }}
       >
         {this.rules.map((rule) => rule.render())}
       </Modal>
