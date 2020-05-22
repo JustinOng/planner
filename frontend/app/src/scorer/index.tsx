@@ -4,6 +4,7 @@ import { Modal } from 'antd';
 import NoEarly from './NoEarlyRule';
 import LunchRule from './LunchRule';
 import FreeDayRule from './FreeDayRule';
+import MinimalBreaksRule from './MinimalBreaksRule';
 
 import { IRule } from './interface.d';
 
@@ -20,7 +21,12 @@ export default class Scorer extends React.Component<IScorerProps, {}> {
   constructor(props: IScorerProps) {
     super(props);
 
-    this.rules = [new NoEarly(), new LunchRule(), new FreeDayRule()];
+    this.rules = [
+      new NoEarly(),
+      new LunchRule(),
+      new FreeDayRule(),
+      new MinimalBreaksRule()
+    ];
   }
 
   render() {
