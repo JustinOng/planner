@@ -4,6 +4,7 @@ import 'antd/dist/antd.less';
 import './App.css';
 
 import Semester from './components/Semester';
+import Scorer from './scorer';
 
 import Processor from './logic/Processor';
 import SemesterCls from './logic/Semester';
@@ -15,9 +16,12 @@ interface IAppState {
   selectedCourses: string[];
   validSemesters: SemesterCls[];
   curSemester: number;
+  showingRules: boolean;
 }
 
 export default class App extends React.Component<{}, IAppState> {
+  scorerRef: any;
+
   constructor(props: {}) {
     super(props);
 
@@ -25,8 +29,11 @@ export default class App extends React.Component<{}, IAppState> {
       courses: {},
       selectedCourses: ['CE2001', 'CE2002', 'CE2004', 'CE2005', 'CE2107'],
       validSemesters: [],
-      curSemester: 0
+      curSemester: 0,
+      showingRules: false
     };
+
+    this.scorerRef = React.createRef();
   }
 
   componentDidMount() {
@@ -44,6 +51,7 @@ export default class App extends React.Component<{}, IAppState> {
   onProcess = () => {
     const p = new Processor(this.state.courses, this.state.selectedCourses);
     const validSemesters = p.run();
+    console.log(this.scorerRef.current.score(validSemesters[0]));
     this.setState({ curSemester: 0, validSemesters });
   };
 
@@ -73,12 +81,27 @@ export default class App extends React.Component<{}, IAppState> {
             >
               Process
             </Button>
+            <Button onClick={() => this.setState({ showingRules: true })}>
+              Rules
+            </Button>
           </div>
           {!!this.state.validSemesters.length && (
-            <Semester
-              data={this.state.validSemesters[this.state.curSemester]}
-            />
+            <div>
+              <div>
+                <Button>Previous</Button>
+                <div>asdf</div>
+                <Button>Next</Button>
+              </div>
+              <Semester
+                data={this.state.validSemesters[this.state.curSemester]}
+              />
+            </div>
           )}
+          <Scorer
+            ref={this.scorerRef}
+            visible={this.state.showingRules}
+            onCancel={() => this.setState({ showingRules: false })}
+          />
         </Layout.Content>
       </Layout>
     );

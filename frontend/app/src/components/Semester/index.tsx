@@ -17,7 +17,10 @@ export default class Semester extends React.Component<ISemesterProps, {}> {
         <div>
           {Object.entries(this.props.data.added).map(
             ([indexId, courseCode]) => (
-              <span className="course-list-item">
+              <span
+                key={`${courseCode}:${indexId}`}
+                className="course-list-item"
+              >
                 {courseCode}: {indexId}
               </span>
             )
