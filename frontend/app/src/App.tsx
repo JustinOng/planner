@@ -1,5 +1,7 @@
 import React from 'react';
 import { Layout, Select, Button } from 'antd';
+import { GlobalHotKeys } from 'react-hotkeys';
+
 import 'antd/dist/antd.less';
 import './App.less';
 
@@ -59,7 +61,30 @@ export default class App extends React.Component<{}, IAppState> {
     this.setState({ curSemester: 0, validSemesters });
   };
 
+  decSemester = () =>
+    this.setState({
+      curSemester: this.state.curSemester ? this.state.curSemester - 1 : 0
+    });
+
+  incSemester = () =>
+    this.setState({
+      curSemester:
+        this.state.curSemester < this.state.validSemesters.length - 1
+          ? this.state.curSemester + 1
+          : this.state.curSemester
+    });
+
   render() {
+    const keyMap = {
+      DEC_SEMESTER: 's',
+      INC_SEMESTER: 'w'
+    };
+
+    const handlers = {
+      DEC_SEMESTER: this.decSemester,
+      INC_SEMESTER: this.incSemester
+    };
+
     return (
       <Layout>
         <Layout.Content>
@@ -92,17 +117,7 @@ export default class App extends React.Component<{}, IAppState> {
           {!!this.state.validSemesters.length && (
             <div>
               <div className="semester-select">
-                <Button
-                  onClick={() =>
-                    this.setState({
-                      curSemester: this.state.curSemester
-                        ? this.state.curSemester - 1
-                        : 0
-                    })
-                  }
-                >
-                  Previous
-                </Button>
+                <Button onClick={this.decSemester}>Previous</Button>
                 <div className="semester-select-text">
                   <span>
                     {`Displaying Timetable ${this.state.curSemester + 1}/${
@@ -110,19 +125,7 @@ export default class App extends React.Component<{}, IAppState> {
                     }`}
                   </span>
                 </div>
-                <Button
-                  onClick={() =>
-                    this.setState({
-                      curSemester:
-                        this.state.curSemester <
-                        this.state.validSemesters.length - 1
-                          ? this.state.curSemester + 1
-                          : this.state.curSemester
-                    })
-                  }
-                >
-                  Next
-                </Button>
+                <Button onClick={this.incSemester}>Next</Button>
               </div>
               <Semester
                 data={this.state.validSemesters[this.state.curSemester]}
@@ -134,6 +137,7 @@ export default class App extends React.Component<{}, IAppState> {
             visible={this.state.showingRules}
             onCancel={() => this.setState({ showingRules: false })}
           />
+          <GlobalHotKeys keyMap={keyMap} handlers={handlers} />
         </Layout.Content>
       </Layout>
     );
