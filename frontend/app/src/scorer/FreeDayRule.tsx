@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { TimePicker } from 'antd';
+import { Tooltip, Checkbox } from 'antd';
+import { InfoCircleFilled } from '@ant-design/icons';
 
 import BaseRule from './BaseRule';
 
@@ -8,11 +9,14 @@ import { IScoreResult, IRule } from './interface';
 import SemesterCls from '../logic/Semester';
 
 export default class FreeDayRule extends BaseRule implements IRule {
+  includeWeekends: boolean;
+
   constructor() {
     super();
 
     this.weight = 100;
     this.description = 'Prioritises completely free days';
+    this.includeWeekends = false;
   }
 
   score(semester: SemesterCls): IScoreResult {
@@ -26,10 +30,14 @@ export default class FreeDayRule extends BaseRule implements IRule {
     }
 
     for (const week of semester.weeks) {
-      for (const dayLessons of Object.values(week.lessons)) {
+      for (const [day, dayLessons] of Object.entries(week.lessons)) {
+        if (!this.includeWeekends) {
+          if (day === 'SAT' || day === 'SUN') continue;
+        }
+
         let hasLesson = false;
 
-        for (const [time, lessons] of dayLessons.entries()) {
+        for (const lessons of dayLessons.values()) {
           if (lessons.length > 0) hasLesson = true;
         }
 
@@ -43,7 +51,33 @@ export default class FreeDayRule extends BaseRule implements IRule {
     };
   }
 
+  private FreeDayRule: React.FC<{}> = (props) => {
+    return (
+      <span className="param">
+        <span className="param-label">
+          <Tooltip title="Whether to reward for free weekends">
+            <span>
+              <span className="param-label">Include Weekends</span>
+              <InfoCircleFilled />
+            </span>
+          </Tooltip>
+          :
+        </span>
+        <Checkbox
+          defaultChecked={this.includeWeekends}
+          onChange={(evt) => {
+            this.includeWeekends = evt.target.checked;
+          }}
+        />
+      </span>
+    );
+  };
+
   render(): React.ReactElement {
-    return React.createElement(this.BaseRule, { key: this.constructor.name });
+    return React.createElement(
+      this.BaseRule,
+      { key: this.constructor.name },
+      React.createElement(this.FreeDayRule)
+    );
   }
 }
