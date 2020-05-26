@@ -1,5 +1,7 @@
+import React from 'react';
 import Semester from './Semester';
 import { ICourse } from './interface.d';
+import { IRule, IScoreResult } from '../scorer/interface.d';
 
 import { NUM_WEEKS } from '../config';
 
@@ -312,4 +314,56 @@ test('course remarks describing teaching weeks (multiple exact)', () => {
       expect(s.weeks[week].lessons['MON'].get(930)!.length).toEqual(0);
     }
   }
+});
+
+test('scoring should return 0 if all rules return 0', () => {
+  const s = new Semester();
+  const rules: IRule[] = [
+    {
+      description: '',
+      score: (semester: Semester) => ({ score: 0, weight: 0 }),
+      render: () => React.createElement('div')
+    }
+  ];
+
+  s.score(rules);
+
+  expect(s.totalScore).toEqual(0);
+});
+
+test('scoring should compute correctly', () => {
+  const s = new Semester();
+  const results: IScoreResult[] = [
+    {
+      score: 10,
+      weight: 10
+    },
+    {
+      score: 20,
+      weight: 5
+    }
+  ];
+
+  const rules: IRule[] = [
+    {
+      description: '',
+      score: (semester: Semester) => results[0],
+      render: () => React.createElement('div')
+    },
+    {
+      description: '',
+      score: (semester: Semester) => results[1],
+      render: () => React.createElement('div')
+    }
+  ];
+
+  s.score(rules);
+
+  expect(s.totalScore).toEqual(
+    Math.floor(
+      (results[0].score * results[0].weight +
+        results[1].score * results[1].weight) /
+        (results[0].weight + results[1].weight)
+    )
+  );
 });
