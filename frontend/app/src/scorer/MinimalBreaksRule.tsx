@@ -15,6 +15,7 @@ export default class MinimalBreaksRule extends BaseRule implements IRule {
     super();
 
     this.penaliseOnLectures = true;
+    this.name = 'Minimal Breaks';
     this.description = 'Penalises breaks between lessons';
   }
 
@@ -90,7 +91,7 @@ export default class MinimalBreaksRule extends BaseRule implements IRule {
   render(): React.ReactElement {
     return React.createElement(
       this.BaseRule,
-      { key: this.constructor.name },
+      { key: this.name },
       React.createElement(this.MinimalBreaksRule)
     );
   }

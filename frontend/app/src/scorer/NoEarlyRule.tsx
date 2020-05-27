@@ -16,6 +16,7 @@ export default class NoEarlyRule extends BaseRule implements IRule {
     super();
 
     this.threshold = moment('10:30', 'HH:mm');
+    this.name = 'No Early Lessons';
     this.description = 'Penalises early lessons';
   }
 
@@ -72,7 +73,7 @@ export default class NoEarlyRule extends BaseRule implements IRule {
   render(): React.ReactElement {
     return React.createElement(
       this.BaseRule,
-      { key: this.constructor.name },
+      { key: this.name },
       React.createElement(this.NoEarlyRule)
     );
   }

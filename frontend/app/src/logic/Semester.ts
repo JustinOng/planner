@@ -73,7 +73,7 @@ export default class Semester {
 
       this.scores.push({
         ...score,
-        rule: rule.constructor.name,
+        rule: rule.name,
         description: rule.description
       });
     }

@@ -16,6 +16,7 @@ export default class LunchRule extends BaseRule implements IRule {
     super();
 
     this.lunchtime = [moment('11:30', 'HH:mm'), moment('13:30', 'HH:mm')];
+    this.name = 'Lunch Rule';
     this.description = 'Penalises the lack of empty slots for lunch';
   }
 
@@ -80,7 +81,7 @@ export default class LunchRule extends BaseRule implements IRule {
   render(): React.ReactElement {
     return React.createElement(
       this.BaseRule,
-      { key: this.constructor.name },
+      { key: this.name },
       React.createElement(this.LunchRule)
     );
   }

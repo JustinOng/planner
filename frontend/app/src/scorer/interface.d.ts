@@ -11,6 +11,7 @@ export interface IScoreResultLabelled extends IScoreResult {
 }
 
 export interface IRule {
+  name: string;
   description: string;
   score(semester: SemesterCls): IScoreResult;
   render(): React.ReactElement;

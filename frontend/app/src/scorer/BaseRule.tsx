@@ -11,11 +11,13 @@ import SemesterCls from '../logic/Semester';
    modal has never been loaded */
 
 export default abstract class BaseRule {
+  name: string;
   description: string;
   enabled: boolean;
   weight: number;
 
   constructor() {
+    this.name = 'Base Rule';
     this.description = 'Base Rule';
     this.enabled = true;
     this.weight = 10;

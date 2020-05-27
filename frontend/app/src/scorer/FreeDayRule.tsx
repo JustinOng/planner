@@ -15,6 +15,7 @@ export default class FreeDayRule extends BaseRule implements IRule {
     super();
 
     this.weight = 100;
+    this.name = 'Free Day';
     this.description = 'Prioritises completely free days';
     this.includeWeekends = false;
   }
@@ -76,7 +77,7 @@ export default class FreeDayRule extends BaseRule implements IRule {
   render(): React.ReactElement {
     return React.createElement(
       this.BaseRule,
-      { key: this.constructor.name },
+      { key: this.name },
       React.createElement(this.FreeDayRule)
     );
   }
