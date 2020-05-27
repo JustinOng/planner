@@ -39,7 +39,7 @@ export default class MinimalBreaksRule extends BaseRule implements IRule {
         // if there are no more lessons that day
         let penalty = 0;
 
-        for (const [time, lessons] of dayLessons.entries()) {
+        for (const lessons of dayLessons.values()) {
           if (
             lessons.length === 0 ||
             (!this.penaliseOnLectures &&
