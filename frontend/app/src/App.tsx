@@ -13,6 +13,8 @@ import SemesterCls from './logic/Semester';
 
 import { ICourse, ICourseMap } from './logic/interface.d';
 
+import { canStore } from './common';
+
 interface IAppState {
   courses: ICourseMap;
   selectedCourses: string[];
@@ -27,9 +29,23 @@ export default class App extends React.Component<{}, IAppState> {
   constructor(props: {}) {
     super(props);
 
+    let selectedCourses = [];
+
+    if (canStore) {
+      const selected = localStorage.getItem('selectedCourses');
+
+      try {
+        if (selected !== null) {
+          selectedCourses = JSON.parse(selected);
+        }
+      } catch (err) {
+        console.error(`Failed to get selectedCourses: ${err}`);
+      }
+    }
+
     this.state = {
       courses: {},
-      selectedCourses: ['CE2001', 'CE2002', 'CE2004'], //, 'CE2005', 'CE2107'],
+      selectedCourses,
       validSemesters: [],
       curSemester: 0,
       showingRules: false
@@ -48,6 +64,10 @@ export default class App extends React.Component<{}, IAppState> {
 
   onChange = (courses: string[]) => {
     this.setState({ selectedCourses: courses });
+
+    if (canStore) {
+      localStorage.setItem('selectedCourses', JSON.stringify(courses));
+    }
   };
 
   onProcess = () => {
