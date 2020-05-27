@@ -14,7 +14,7 @@ export default class MinimalBreaksRule extends BaseRule implements IRule {
   constructor() {
     super();
 
-    this.penaliseOnLectures = false;
+    this.penaliseOnLectures = true;
     this.description = 'Penalises breaks between lessons';
   }
 
@@ -33,16 +33,26 @@ export default class MinimalBreaksRule extends BaseRule implements IRule {
         let hadLesson = false;
         // track how many slots away from last lesson
         let distanceFromLesson = 0;
+        // accumulates penalty, applied only if there is
+        // an occupied timeslot.
+        // this prevents applying the penalty
+        // if there are no more lessons that day
+        let penalty = 0;
 
         for (const [time, lessons] of dayLessons.entries()) {
           if (
             lessons.length === 0 ||
-            (lessons.length && lessons[0].type.includes('LEC'))
+            (!this.penaliseOnLectures &&
+              lessons.length &&
+              lessons[0].type.includes('LEC'))
           ) {
             distanceFromLesson++;
-            if (hadLesson) score -= distanceFromLesson;
+            if (hadLesson) {
+              penalty += distanceFromLesson;
+            }
           } else {
             hadLesson = true;
+            score -= penalty;
             distanceFromLesson = 0;
           }
         }
