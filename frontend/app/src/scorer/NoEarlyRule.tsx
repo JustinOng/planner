@@ -32,7 +32,7 @@ export default class NoEarlyRule extends BaseRule implements IRule {
     for (const week of semester.weeks) {
       for (const dayLessons of Object.values(week.lessons)) {
         for (const [time, lessons] of dayLessons.entries()) {
-          if (time <= parseInt(this.threshold.format('Hmm'), 10)) {
+          if (time < parseInt(this.threshold.format('Hmm'), 10)) {
             if (lessons.length) score--;
           }
         }
