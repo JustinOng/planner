@@ -5,6 +5,7 @@ import NoEarly from './NoEarlyRule';
 import LunchRule from './LunchRule';
 import FreeDayRule from './FreeDayRule';
 import MinimalBreaksRule from './MinimalBreaksRule';
+import DanglingLessonRule from './DanglingLessonRule';
 
 import { IRule } from './interface.d';
 
@@ -25,7 +26,8 @@ export default class Scorer extends React.Component<IScorerProps, {}> {
       new NoEarly(),
       new LunchRule(),
       new FreeDayRule(),
-      new MinimalBreaksRule()
+      new MinimalBreaksRule(),
+      new DanglingLessonRule()
     ];
   }
 
