@@ -8,6 +8,7 @@ import WeekCls from '../../logic/Week';
 interface IWeekProps {
   data: WeekCls;
   indexMap: IIndexMap;
+  showLectures?: boolean;
 }
 
 interface IData {
@@ -54,6 +55,13 @@ export default class Week extends React.Component<IWeekProps, {}> {
           const lesson = week.lessons[day].get(data[index].time);
 
           if (!lesson || !lesson.length) {
+            return {
+              children: '',
+              props: {}
+            };
+          }
+
+          if (!this.props.showLectures && lesson[0].type.includes('LEC')) {
             return {
               children: '',
               props: {}

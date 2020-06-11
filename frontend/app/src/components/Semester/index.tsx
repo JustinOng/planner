@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Tag } from 'antd';
+import { Tabs, Tag, Checkbox } from 'antd';
 import { GlobalHotKeys } from 'react-hotkeys';
 
 import Week from '../Week';
@@ -15,6 +15,7 @@ interface ISemesterProps {
 
 interface ISemesterState {
   activeKey: number;
+  showLectures: boolean;
 }
 
 export default class Semester extends React.Component<
@@ -25,7 +26,8 @@ export default class Semester extends React.Component<
     super(props);
 
     this.state = {
-      activeKey: 0
+      activeKey: 0,
+      showLectures: false
     };
   }
 
@@ -78,6 +80,13 @@ export default class Semester extends React.Component<
             </div>
           </div>
         </div>
+        <Checkbox
+          onChange={(evt) =>
+            this.setState({ showLectures: evt.target.checked })
+          }
+        >
+          Show Lectures
+        </Checkbox>
         <Tabs
           activeKey={this.state.activeKey.toString()}
           onTabClick={(key: string) =>
@@ -86,7 +95,11 @@ export default class Semester extends React.Component<
         >
           {this.props.data.weeks.map((week, i) => (
             <Tabs.TabPane key={i.toString()} tab={`Week ${i + 1}`}>
-              <Week data={week} indexMap={this.props.data.added} />
+              <Week
+                data={week}
+                indexMap={this.props.data.added}
+                showLectures={this.state.showLectures}
+              />
             </Tabs.TabPane>
           ))}
         </Tabs>
